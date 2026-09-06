@@ -35,7 +35,7 @@ Requirements
 
 Bugs
 ~~~~
-- None yet.
+- Fix :func:`moabb.analysis.plotting.summary_plot` raising ``ValueError: The truth value of a Series is ambiguous`` when two pipeline names share a first word and are longer than ten characters, such as the shipped ``Tangent Space LR`` and ``Tangent Space SVM Grid``: shortening both to ``Tangent`` gave the effect and significance frames duplicate columns. It now checks for a collision and keeps the full names, the same guard :func:`moabb.analysis.analyze` and :func:`moabb.analysis.plotting.meta_analysis_plot` already apply (by `Iain`_)
 
 Code health
 ~~~~~~~~~~~

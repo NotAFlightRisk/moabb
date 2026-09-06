@@ -1055,8 +1055,12 @@ def summary_plot(sig_df, effect_df, p_threshold=0.05, simplify=True):
         Pyplot handle
     """
     if simplify:
-        effect_df.columns = effect_df.columns.map(_simplify_names)
-        sig_df.columns = sig_df.columns.map(_simplify_names)
+        shortened = effect_df.columns.map(_simplify_names)
+        if len(shortened) != len(set(shortened)):
+            log.warning("Pipeline names are too similar, turning off name shortening")
+        else:
+            effect_df.columns = shortened
+            sig_df.columns = sig_df.columns.map(_simplify_names)
     annot_df = effect_df.copy().astype(object)
     for row in annot_df.index:
         for col in annot_df.columns:

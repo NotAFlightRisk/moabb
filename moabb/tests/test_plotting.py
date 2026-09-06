@@ -16,6 +16,7 @@ from moabb.analysis.plotting import (
     distribution_plot,
     paired_plot,
     score_plot,
+    summary_plot,
 )
 from moabb.datasets.utils import dataset_list
 
@@ -124,3 +125,25 @@ def test_dataset_bubble_plot_is_reproducible():
     plt.close(fig2)
 
     np.testing.assert_array_equal(image1, image2)
+
+
+def _significance_frames(names):
+    sig_df = pd.DataFrame([[1.0, 0.01], [0.01, 1.0]], index=names, columns=names)
+    effect_df = pd.DataFrame([[0.0, 0.5], [-0.5, 0.0]], index=names, columns=names)
+    return sig_df, effect_df
+
+
+@pytest.mark.parametrize(
+    "names,labels",
+    [
+        (
+            ["Tangent Space LR", "Tangent Space SVM Grid"],
+            ["Tangent Space LR", "Tangent Space SVM Grid"],
+        ),
+        (["Tangent Space LR", "Riemannian Geometry LDA"], ["Tangent", "Riemannian"]),
+    ],
+)
+def test_summary_plot_shortened_names(names, labels):
+    fig = summary_plot(*_significance_frames(names))
+    assert isinstance(fig, Figure)
+    assert [t.get_text() for t in fig.axes[0].get_xticklabels()] == labels
